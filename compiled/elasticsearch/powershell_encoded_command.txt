@@ -1,0 +1,4 @@
+# Suspicious Encoded PowerShell Command Line
+# Sigma: detections/windows/powershell_encoded_command.yml
+
+any where (Image like~ ("*\\powershell.exe", "*\\pwsh.exe")) and (CommandLine like~ ("* -EncodedCommand*", "* -enc *", "* -e *"))

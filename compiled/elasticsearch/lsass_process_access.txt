@@ -1,0 +1,4 @@
+# LSASS Process Access for Credential Dumping
+# Sigma: detections/windows/lsass_process_access.yml
+
+any where (TargetImage:"*\\lsass.exe" and (GrantedAccess like~ ("*0x1010*", "*0x1410*", "*0x1438*", "*0x143a*"))) and (not (SourceImage like~ ("*\\MsMpEng.exe", "*\\NisSrv.exe")))

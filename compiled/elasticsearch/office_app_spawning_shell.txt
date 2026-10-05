@@ -1,0 +1,4 @@
+# Office Application Spawning Shell
+# Sigma: detections/windows/office_app_spawning_shell.yml
+
+any where (ParentImage like~ ("*\\WINWORD.EXE", "*\\EXCEL.EXE", "*\\POWERPNT.EXE", "*\\MSPUB.EXE", "*\\VISIO.EXE")) and (Image like~ ("*\\powershell.exe", "*\\pwsh.exe", "*\\cmd.exe", "*\\wscript.exe", "*\\cscript.exe", "*\\mshta.exe"))

@@ -1,0 +1,36 @@
+title: Office Application Spawning Shell
+id: 4b87b9dd-2337-4237-a4d3-7c330bc44b8d
+status: experimental
+description: >
+  Detects an Office application spawning a command shell or scripting
+  interpreter, a classic behavior of malicious macros and phishing payloads.
+author: hokage_787
+date: 2026/10/05
+references:
+  - https://attack.mitre.org/techniques/T1059/
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - '\WINWORD.EXE'
+      - '\EXCEL.EXE'
+      - '\POWERPNT.EXE'
+      - '\MSPUB.EXE'
+      - '\VISIO.EXE'
+  selection_child:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\cmd.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\mshta.exe'
+  condition: selection_parent and selection_child
+falsepositives:
+  - Rare; some legitimate Office add-ins spawn helpers (investigate each hit)
+level: high
+tags:
+  - attack.execution
+  - attack.t1059

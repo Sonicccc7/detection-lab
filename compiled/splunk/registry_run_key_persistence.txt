@@ -1,0 +1,4 @@
+# Registry Run Key Persistence
+# Sigma: detections/windows/registry_run_key_persistence.yml
+
+TargetObject IN ("*\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run*", "*\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce*", "*\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run*") NOT (Image IN ("*\\OneDriveSetup.exe", "*\\SecurityHealthSystray.exe"))

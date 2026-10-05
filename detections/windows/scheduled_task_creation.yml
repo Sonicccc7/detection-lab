@@ -1,0 +1,34 @@
+title: Suspicious Scheduled Task Creation
+id: 1dbaac7b-5b5c-4c9f-8cff-78396d64b991
+status: experimental
+description: >
+  Detects creation of scheduled tasks via schtasks.exe, a common persistence
+  and execution technique. Tuned (v2): excludes known vendor updater tasks
+  that caused false positives in v1 — see docs/writeup_schtasks_tuning.md.
+author: hokage_787
+date: 2026/10/05
+references:
+  - https://attack.mitre.org/techniques/T1053/005/
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith: '\schtasks.exe'
+    CommandLine|contains: '/create'
+  filter_vendor_updaters:
+    CommandLine|contains:
+      - 'GoogleUpdate'
+      - 'OneDrive'
+      - 'AdobeARM'
+      - 'MicrosoftEdgeUpdate'
+  condition: selection and not filter_vendor_updaters
+falsepositives:
+  - Legitimate admin scripts creating tasks (tune with task-name allowlist)
+  - Attacker naming a task after a vendor updater (residual risk, accepted)
+level: medium
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.execution
+  - attack.t1053.005

@@ -1,0 +1,33 @@
+title: Potential SSH Brute Force
+id: 6b99b69b-cbd2-4627-bc54-05d746297633
+status: experimental
+description: >
+  Detects more than 10 failed SSH authentication attempts from a single source
+  IP within 5 minutes, indicative of password brute forcing.
+author: hokage_787
+date: 2026/10/05
+references:
+  - https://attack.mitre.org/techniques/T1110/001/
+logsource:
+  product: linux
+  service: sshd
+detection:
+  selection:
+    EventType: 'Failed password'
+  condition: selection
+correlations:
+  brute_force:
+    type: event_count
+    rules:
+      - selection
+    group-by:
+      - SourceIP
+    timespan: 5m
+    threshold: 10
+falsepositives:
+  - Users repeatedly mistyping passwords
+  - Internet scanners hitting exposed SSH (tune with allowlist for known scanners)
+level: medium
+tags:
+  - attack.credential_access
+  - attack.t1110.001

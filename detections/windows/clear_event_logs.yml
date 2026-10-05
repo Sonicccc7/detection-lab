@@ -1,0 +1,25 @@
+title: Windows Event Log Cleared
+id: 4bf9ae66-2424-46cb-8111-89c7d4440443
+status: experimental
+description: >
+  Detects clearing of Windows event logs via wevtutil, a defense-evasion
+  technique used to hide attacker activity.
+author: hokage_787
+date: 2026/10/05
+references:
+  - https://attack.mitre.org/techniques/T1070/001/
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|endswith: '\wevtutil.exe'
+  selection_cli:
+    CommandLine|contains: ' cl '
+  condition: selection_img and selection_cli
+falsepositives:
+  - Rare in normal operations; occasional admin log-rotation scripts
+level: high
+tags:
+  - attack.defense_evasion
+  - attack.t1070.001

@@ -1,0 +1,4 @@
+# Windows Event Log Cleared
+# Sigma: detections/windows/clear_event_logs.yml
+
+any where Image:"*\\wevtutil.exe" and CommandLine:"* cl *"

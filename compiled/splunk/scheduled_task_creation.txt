@@ -1,0 +1,4 @@
+# Suspicious Scheduled Task Creation
+# Sigma: detections/windows/scheduled_task_creation.yml
+
+Image="*\\schtasks.exe" CommandLine="*/create*" NOT (CommandLine IN ("*GoogleUpdate*", "*OneDrive*", "*AdobeARM*", "*MicrosoftEdgeUpdate*"))

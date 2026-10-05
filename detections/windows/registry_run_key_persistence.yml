@@ -1,0 +1,31 @@
+title: Registry Run Key Persistence
+id: ef42e4a7-24b2-4642-b03f-83147a5594e4
+status: experimental
+description: >
+  Detects creation or modification of Registry Run keys, a common persistence
+  mechanism that executes a payload at user logon.
+author: hokage_787
+date: 2026/10/05
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+logsource:
+  category: registry_set
+  product: windows
+detection:
+  selection:
+    TargetObject|contains:
+      - '\SOFTWARE\Microsoft\Windows\CurrentVersion\Run'
+      - '\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
+      - '\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run'
+  filter_legit:
+    Image|endswith:
+      - '\OneDriveSetup.exe'
+      - '\SecurityHealthSystray.exe'
+  condition: selection and not filter_legit
+falsepositives:
+  - Legitimate software registering auto-start entries (tune per environment)
+level: medium
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1547.001

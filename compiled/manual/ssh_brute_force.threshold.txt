@@ -1,0 +1,25 @@
+# Potential SSH Brute Force — hand-authored threshold equivalents
+# Sigma source: detections/linux/ssh_brute_force.yml
+#
+# Why hand-authored: pySigma backends compile the base selection but drop
+# Sigma correlations (event_count / group-by / timespan / threshold).
+# Below are the native threshold implementations a detection engineer would
+# actually deploy. Correlation: >10 failed logins per SourceIP in 5 minutes.
+
+# --- Elastic Security: create a THRESHOLD rule (not a plain EQL rule) ---
+# Rule type : Threshold
+# Index     : logs-system.auth-*
+# EQL query : any where EventType == "Failed password"
+# Group by  : SourceIP
+# Threshold : count > 10
+# Window    : 5m
+
+# --- Splunk SPL (paste into a scheduled alert, cron every 5m) ---
+#| tstats count from datamodel=Authentication where Authentication.action="failure" groupby _time, Authentication.src span=5m
+#| where count > 10
+#
+# Raw-index equivalent (no CIM):
+# EventType="Failed password"
+# | bin _time span=5m
+# | stats count by SourceIP, _time
+# | where count > 10

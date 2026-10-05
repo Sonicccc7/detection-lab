@@ -1,0 +1,4 @@
+# Potential SSH Brute Force
+# Sigma: detections/linux/ssh_brute_force.yml
+
+EventType="Failed password"

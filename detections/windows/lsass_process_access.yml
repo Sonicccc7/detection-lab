@@ -1,0 +1,33 @@
+title: LSASS Process Access for Credential Dumping
+id: 96f77992-53e3-4aa0-a1f0-7f817abe85c9
+status: experimental
+description: >
+  Detects processes opening LSASS with access masks associated with credential
+  dumping (Mimikatz, Procdump, nanodump). Requires Sysmon Event ID 10
+  (ProcessAccess) logging.
+author: hokage_787
+date: 2026/10/05
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+logsource:
+  category: process_access
+  product: windows
+detection:
+  selection:
+    TargetImage|endswith: '\lsass.exe'
+    GrantedAccess|contains:
+      - '0x1010'
+      - '0x1410'
+      - '0x1438'
+      - '0x143a'
+  filter_security_products:
+    SourceImage|endswith:
+      - '\MsMpEng.exe'
+      - '\NisSrv.exe'
+  condition: selection and not filter_security_products
+falsepositives:
+  - EDR/AV products scanning LSASS (tune per environment's security stack)
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1003.001
